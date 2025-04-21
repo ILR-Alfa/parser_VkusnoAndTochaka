@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-
+# Настройка Selenium для Firefox
 url = "https://vkusnoitochka.ru/menu"
 firefox_options = FirefoxOptions()
 firefox_options.binary_location = r"C:\Program Files\Mozilla Firefox\firefox.exe"
@@ -30,7 +30,11 @@ try:
             time.sleep(1)  
             item.click()
             modal = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".modal-abstraction")))
-            name = modal.find_element(By.CSS_SELECTOR, ".product-top__name").text.strip()
+
+            
+            name_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".product-top__name")))
+            name = name_element.text.strip()
+
             price = modal.find_element(By.CSS_SELECTOR, "span.font-type-6:nth-child(1)").text.strip()
             image = modal.find_element(By.CSS_SELECTOR, ".common-image__img").get_attribute("src")
 
@@ -47,7 +51,7 @@ try:
             try:
                 close_button = modal.find_element(By.CSS_SELECTOR, ".modal-abstraction__close")
                 driver.execute_script("arguments[0].scrollIntoView(true);", close_button)
-                time.sleep(1) 
+                time.sleep(1)  
                 close_button.click()
                 wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, ".modal-abstraction")))
             except Exception:
