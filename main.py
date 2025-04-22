@@ -5,6 +5,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from openpyxl import Workbook
 
 # Настройка Selenium для Firefox
 url = "https://vkusnoitochka.ru/menu"
@@ -17,6 +18,15 @@ firefox_options.add_argument("--no-sandbox")
 service = FirefoxService(r"C:\web\geckodriver\geckodriver.exe")
 driver = webdriver.Firefox(service=service, options=firefox_options)
 wait = WebDriverWait(driver, 10)
+
+
+
+wb = Workbook()
+ws = wb.active
+ws.title = "Products"  # Название листа
+ws.append(["Name", "Price", "Image"])  # Заголовки столбцов
+
+
 
 try:
     driver.get(url)
@@ -44,6 +54,9 @@ try:
                 "image": image
             })
 
+
+            ws.append([name, price, image])
+
         except Exception as e:
             print(f"Ошибка при парсинге товара: {e}")
 
@@ -58,4 +71,5 @@ try:
                 pass
 
 finally:
+    wb.save("products.xlsx")
     driver.quit()
